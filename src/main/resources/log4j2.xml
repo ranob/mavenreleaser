@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+  <Appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+    </Console>
+    <File name="MyFile" fileName="/opt/maven-releaser/releaser.log" immediateFlush="true" append="true">
+            <PatternLayout pattern="%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </File>
+  </Appenders>
+  <Loggers>
+  	<Logger name="org.apache.http.wire" level="ERROR"/>
+    <Logger name="org.agrsw" level="DEBUG">
+    	<AppenderRef ref="MyFile"/>
+    </Logger>
+    
+     
+    <Root level="ERROR">
+      
+    </Root>
+  </Loggers>
+</Configuration>
