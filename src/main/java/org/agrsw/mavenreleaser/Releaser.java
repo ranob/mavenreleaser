@@ -32,7 +32,10 @@ public class Releaser implements CommandLineRunner
 {
     @Value("${maven.home}")
     private String mavenHomeProperty;
+    @Value("${notcheck.token}")
+    private String notcheckTokenPropery;
     private static String mavenHome;
+    private static String notCheckToken;
     private static final Logger log;
     private static Map<String, String> artefacts;
     private static Map<String, String> artefactsAlreadyReleased;
@@ -48,8 +51,8 @@ public class Releaser implements CommandLineRunner
     private static boolean jiraIntegration;
     private static String repoURL;
     private JiraClient jiraClient;
-    private String jiraUser ="admin1";
-    private String jiraPassword="KKKKK.";
+    private String jiraUser ="XXX";
+    private String jiraPassword="XXXX.";
     
     static {
         Releaser.mavenHome = "";
@@ -83,6 +86,9 @@ public class Releaser implements CommandLineRunner
     public void run(final String... args) {
         Releaser.log.debug("Start Releasing..");
         Releaser.mavenHome = this.mavenHomeProperty;
+        Releaser.notCheckToken = this.notcheckTokenPropery;
+        Releaser.log.debug("Maven Home: " + Releaser.mavenHome);
+        Releaser.log.debug("NotCheck Token: " + Releaser.notCheckToken);
         final Options options = new Options();
         final Option userNameOption = Option.builder().argName("username").hasArg(true).longOpt("username").required(true).build();
         final Option urlOption = Option.builder().argName("url").hasArg(true).longOpt("url").required(true).build();
@@ -336,7 +342,10 @@ public class Releaser implements CommandLineRunner
     private static String getProject(final String groupId) {
         String project = "";
         if (groupId != null && !groupId.equals("")) {
-            if (groupId.startsWith("com.mercurytfs.mercury.core") || groupId.startsWith("com.mercurytfs.mercury.config") || groupId.startsWith("com.mercurytfs.mercury.products") ||  groupId.startsWith("com.mercurytfs.mercury.web") || groupId.startsWith("com.mercurytfs.mercury.modules") || groupId.startsWith("com.mercurytfs.mercury.init")  || groupId.startsWith("com.mercurytfs.mercury.scripts") || groupId.startsWith("com.mercurytfs.mercury.integration")) {
+            if (groupId.startsWith("com.mercurytfs.mercury.core") || groupId.startsWith("com.mercurytfs.mercury.config") || groupId.startsWith("com.mercurytfs.mercury.products") ||  
+                groupId.startsWith("com.mercurytfs.mercury.web") || groupId.startsWith("com.mercurytfs.mercury.modules") || groupId.startsWith("com.mercurytfs.mercury.init")  || 
+                groupId.startsWith("com.mercurytfs.mercury.scripts") || groupId.startsWith("com.mercurytfs.mercury.integration")
+                || groupId.startsWith("com.mercurytfs.mercury.cloud") ) {
                 project = "MERCURY";
             }
             else if (groupId.startsWith("com.santander.comex") || groupId.startsWith("com.mercurytfs.mercury.customers.bancosantander.spain.santandercomex")) {
@@ -685,7 +694,7 @@ public class Releaser implements CommandLineRunner
             final ISVNAuthenticationManager authManager = SVNWCUtil.createDefaultAuthenticationManager(Releaser.username, Releaser.password);
             manager.setAuthenticationManager(authManager);
             final SVNCommitClient svnCommitClient = manager.getCommitClient();
-            svnCommitClient.doCommit(new File[] { file }, false, "Releaser #NOTCHECK#", (SVNProperties)null, (String[])null, false, false, SVNDepth.INFINITY);
+            svnCommitClient.doCommit(new File[] { file }, false, "Releaser " + Releaser.notCheckToken, (SVNProperties)null, (String[])null, false, false, SVNDepth.INFINITY);
         }
         catch (SVNException e) {
             Releaser.log.debug("Error checking out project." + e);

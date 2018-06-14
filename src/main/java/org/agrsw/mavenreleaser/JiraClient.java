@@ -26,17 +26,17 @@ public class JiraClient
     static {
         log = LoggerFactory.getLogger((Class)JiraClient.class);
         JiraClient.apiURL = "";
-        JiraClient.userName = "aaaaaaa";
-        JiraClient.password = "bbbb";
-        JiraClient.jiraURL = "http://192.168.10.202:8080/rest/api/2/";
-        JiraClient.hostName = "192.168.10.202";
+        JiraClient.userName = "XXXX";
+        JiraClient.password = "XXXX.";
+        JiraClient.jiraURL = "http://192.168.10.21:8080/rest/api/2/";
+        JiraClient.hostName = "192.168.10.21";
         JiraClient.port = 8080;
     }
     
       /*public static void main(final String[] args) {
     	   
-    	     String jiraUser ="admin1";
-    	    String jiraPassword="kkkk.";
+    	     String jiraUser ="XXXX";
+    	    String jiraPassword="XXX.";
     	    JiraClient.setUserName(jiraUser);
     	    JiraClient.setPassword(jiraPassword);    	  
     	    JiraClient.createVersion("MERCURY","borrame36", "version para borrar");
