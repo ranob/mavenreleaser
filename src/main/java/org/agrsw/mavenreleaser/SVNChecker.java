@@ -4,6 +4,8 @@ import org.agrsw.mavenreleaser.Artefact;
 import org.agrsw.mavenreleaser.Releaser;
 
 import org.slf4j.*;
+import org.springframework.beans.factory.annotation.Value;
+
 import java.util.regex.*;
 
 public class SVNChecker
@@ -16,6 +18,9 @@ public class SVNChecker
     private static int ERROR_SVN_FILE_HAS_NOT_OPEN_ARTEfACT_OR_DONT_EXIST;
     private static int ERROR_SVN_FILE_ARTEFACT_IS_NOT_LINKED_WITH_COMMIT_ISSUE;
     private static int ERROR_JIRA_ISSUE_IS_RESOLVED_CANNOT_COMMIT_TO_THIS_ISSUE;
+    @Value("${notcheck.token}")
+    private String notcheckTokenProperty;
+    private static String notcheckToken ="#NOTCHECK";
     //java -cp mavenreleaser-3.0.0-SNAPSHOT.jar -Dloader.main=org.agrsw.mavenreleaser.SVNChecker    org.springframework.boot.loader.PropertiesLauncher
     static {
         log = LoggerFactory.getLogger((Class)SVNChecker.class);
@@ -61,6 +66,8 @@ public class SVNChecker
             commitMessage = args[1];
         }
         
+      
+        
        // boolean isAllowedUser = isUserAllowed(args[2]);
        // if (!isAllowedUser){
        // 	System.exit(0);
@@ -71,6 +78,9 @@ public class SVNChecker
         final String[] projects = { "MERCURY", "BANORTE", "PRUEB", "SANESPBACK", "SANMEXICO","LIBERBANK", "SANGER", "SANCHILE", "TARIFARIO", "SANESP","SANCHILEBK"};
         String issueKey = null;
         final SVNChecker fm = new SVNChecker();
+      //  SVNChecker.notcheckToken = fm.notcheckTokenProperty; 
+        SVNChecker.log.info("Not Check Toker: " + notcheckToken);
+        
         boolean keyFound = false;
         SVNChecker.log.info("Check if the commit message contains de jira issue key");
         for (int i = 0; i < projects.length; ++i) {
@@ -84,8 +94,8 @@ public class SVNChecker
         if (keyFound) {
             SVNChecker.log.info("jira issue key found");
             SVNChecker.log.info("Before call checkCommit");
-            Releaser.setUsername("alberto.garcia");
-            Releaser.setPassword("mercury2ag.");
+              Releaser.setUsername("XXXX");
+              Releaser.setPassword("XXXX");
             final int result = Releaser.checkCommit(svnFiles, issueKey);
             SVNChecker.log.info("After call checkCommit. Result: " + result);
             switch (result) {
@@ -109,7 +119,7 @@ public class SVNChecker
            
             issueKey = fm.checkCommitMessageWithOutNumber(commitMessage, "maven-release-plugin");
             if (issueKey==null){
-            	issueKey = fm.checkCommitMessageWithOutNumber(commitMessage, "#NOTCHECK#");            	
+            	issueKey = fm.checkCommitMessageWithOutNumber(commitMessage,SVNChecker.notcheckToken );            	
             }
             if (issueKey == null) {
                 SVNChecker.log.error("The commit Message has not the correct format: ERROR_COMMIT_MESSAGE_FORMAT");
