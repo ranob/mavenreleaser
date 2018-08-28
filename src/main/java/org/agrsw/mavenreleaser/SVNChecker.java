@@ -78,7 +78,8 @@ public class SVNChecker
         final String[] projects = { "MERCURY", "BANORTE", "PRUEB", "SANESPBACK", "SANMEXICO","LIBERBANK", "SANGER", "SANCHILE", "TARIFARIO", "SANESP","SANCHILEBK"};
         String issueKey = null;
         final SVNChecker fm = new SVNChecker();
-      //  SVNChecker.notcheckToken = fm.notcheckTokenProperty; 
+
+        SVNChecker.notcheckToken = fm.notcheckTokenProperty;
         SVNChecker.log.info("Not Check Toker: " + notcheckToken);
         
         boolean keyFound = false;
