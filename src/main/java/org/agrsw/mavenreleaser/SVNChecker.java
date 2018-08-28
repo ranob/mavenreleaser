@@ -6,6 +6,8 @@ import org.agrsw.mavenreleaser.Releaser;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.io.IOException;
+import java.util.Properties;
 import java.util.regex.*;
 
 public class SVNChecker
@@ -33,6 +35,9 @@ public class SVNChecker
     
     public SVNChecker() {
         this.repositoryURL = "http://192.168.10.2/svn/mercury";
+
+		notcheckTokenProperty = Releaser.getToken();
+		
     }
     
     public Artefact getArtefactOfFile(final String file) {
@@ -75,10 +80,10 @@ public class SVNChecker
         
 
         
-        final String[] projects = { "MERCURY", "BANORTE", "PRUEB", "SANESPBACK", "SANMEXICO","LIBERBANK", "SANGER", "SANCHILE", "TARIFARIO", "SANESP","SANCHILEBK"};
+        final String[] projects = { "MERCURY", "BANORTE", "PRUEB", "SANESPBACK", "SANMEXICO","LIBERBANK", "SANGER", "SANCHILE", "TARIFARIO", "SANESP","SANCHILEBK","SANESPBCK2"};
         String issueKey = null;
         final SVNChecker fm = new SVNChecker();
-
+        
         SVNChecker.notcheckToken = fm.notcheckTokenProperty;
         SVNChecker.log.info("Not Check Toker: " + notcheckToken);
         
@@ -95,8 +100,11 @@ public class SVNChecker
         if (keyFound) {
             SVNChecker.log.info("jira issue key found");
             SVNChecker.log.info("Before call checkCommit");
-              Releaser.setUsername("XXXX");
-              Releaser.setPassword("XXXX");
+            JiraClient.userName = Releaser.jiraUser;
+            JiraClient.password = Releaser.jiraPassword;
+            Releaser.setUsername(Releaser.jiraUser);
+            Releaser.setPassword(Releaser.jiraPassword);
+            
             final int result = Releaser.checkCommit(svnFiles, issueKey);
             SVNChecker.log.info("After call checkCommit. Result: " + result);
             switch (result) {

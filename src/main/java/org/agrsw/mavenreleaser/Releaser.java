@@ -32,7 +32,7 @@ public class Releaser implements CommandLineRunner
 {
     @Value("${maven.home}")
     private String mavenHomeProperty;
-    @Value("${notcheck.token}")
+ //   @Value("${notcheck.token}")
     private String notcheckTokenPropery;
     private static String mavenHome;
     private static String notCheckToken;
@@ -51,8 +51,8 @@ public class Releaser implements CommandLineRunner
     private static boolean jiraIntegration;
     private static String repoURL;
     private JiraClient jiraClient;
-    private String jiraUser ="XXX";
-    private String jiraPassword="XXXX.";
+    public static String jiraUser ="admin1";
+    public static String jiraPassword="mer01cury.";
     
     static {
         Releaser.mavenHome = "";
@@ -86,7 +86,7 @@ public class Releaser implements CommandLineRunner
     public void run(final String... args) {
         Releaser.log.debug("Start Releasing..");
         Releaser.mavenHome = this.mavenHomeProperty;
-        Releaser.notCheckToken = this.notcheckTokenPropery;
+        Releaser.notCheckToken = Releaser.getToken();
         Releaser.log.debug("Maven Home: " + Releaser.mavenHome);
         Releaser.log.debug("NotCheck Token: " + Releaser.notCheckToken);
         final Options options = new Options();
@@ -132,11 +132,12 @@ public class Releaser implements CommandLineRunner
             formatter.printHelp("java -jar nombrejar.jar", options);
             System.exit(-1);
         }
+        JiraClient.setUserName(jiraUser);
+        JiraClient.setPassword(jiraPassword);  
         try {
             if (Releaser.action.equals("release")) {
                 this.jiraClient = new JiraClient();
-                JiraClient.setUserName(jiraUser);
-                JiraClient.setPassword(jiraPassword);                
+                              
                 doRelease(Releaser.url, String.valueOf(Releaser.artefactName) + "-" + System.currentTimeMillis());
                 Releaser.log.info("######################## Artefactos encontrados:  ###################");
                 Collection<String> values = Releaser.artefacts.keySet();
@@ -384,6 +385,10 @@ public class Releaser implements CommandLineRunner
             else if (groupId.startsWith("com.mercurytfs.mercury.customers.santander.chile.back")){
             	project = "SANCHILEBK";
             }
+            else if (groupId.startsWith("com.mercurytfs.mercury.customers.bancosantander.spain.cloud")){
+            	project = "SANESPBCK2";
+            }
+            
             
             
         }
@@ -1017,5 +1022,18 @@ public class Releaser implements CommandLineRunner
     
     public static void setPassword(final String password) {
         Releaser.password = password;
+    }
+    
+    public static String getToken(){
+    		String notcheckTokenProperty = null;
+    	    Properties prop = new Properties();
+	        try {
+				prop.load(Releaser.class.getClassLoader().getResourceAsStream("config.properties"));
+				notcheckTokenProperty = prop.getProperty("notchecktoken");
+			} catch (IOException e) {
+				log.error(e.toString());
+			}	        
+    		return notcheckTokenProperty;
+    	
     }
 }

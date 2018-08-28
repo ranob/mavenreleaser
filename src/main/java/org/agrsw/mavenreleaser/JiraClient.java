@@ -24,10 +24,7 @@ public class JiraClient
     public static int port;
     
     static {
-        log = LoggerFactory.getLogger((Class)JiraClient.class);
-        JiraClient.apiURL = "";
-        JiraClient.userName = "XXXX";
-        JiraClient.password = "XXXX.";
+        log = LoggerFactory.getLogger((Class)JiraClient.class);             
         JiraClient.jiraURL = "http://192.168.10.21:8080/rest/api/2/";
         JiraClient.hostName = "192.168.10.21";
         JiraClient.port = 8080;
