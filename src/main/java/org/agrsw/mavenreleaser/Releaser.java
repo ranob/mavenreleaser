@@ -51,8 +51,8 @@ public class Releaser implements CommandLineRunner
     private static boolean jiraIntegration;
     private static String repoURL;
     private JiraClient jiraClient;
-    public static String jiraUser ="admin1";
-    public static String jiraPassword="mer01cury.";
+    public static String jiraUser ="XXX";
+    public static String jiraPassword="XXXXX";
     
     static {
         Releaser.mavenHome = "";
